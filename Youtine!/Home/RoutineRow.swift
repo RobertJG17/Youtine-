@@ -35,15 +35,15 @@ struct RoutineRow: View {
                     .strikethrough(allHabitsCompleted, color: darkDisplay ? .white : .black)
             }
         }
-        .blur(radius: allHabitsCompleted ? 2 : 0)
     }
 }
 
 #Preview("RoutineRow") {
-    let habit1 = Habit(label: "Read", completed: true, orderIndex: 0)
-    let habit2 = Habit(label: "Exercise", completed: false, orderIndex: 1)
-    let routine = Routine(title: "Morning", start: .now, orderIndex: 0, habits: [habit1, habit2])
-    return RoutineRow(
+    let habit1 = Habit(label: "Read", orderIndex: 0, completed: true)
+    let habit2 = Habit(label: "Exercise", orderIndex: 1, completed: false)
+    let routine = Routine(orderIndex: 0, title: "Morning", start: .now, cadence: Cadence.daily.rawValue, habits: [habit1, habit2])
+    
+    RoutineRow(
         routine: routine,
         darkDisplay: false,
         sortedHabits: [habit1, habit2],

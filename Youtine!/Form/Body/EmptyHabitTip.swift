@@ -5,15 +5,17 @@
 //  Created by Bobby Guerra on 3/25/26.
 //
 
+import SwiftUI
+import TipKit
 
-struct InlineTip: Tip {
+struct EmptyHabitTip: Tip {
     var title: Text {
-        Text("Save as a Favorite")
+        Text("Create a habit")
     }
     var message: Text? {
-        Text("Your favorite backyards always appear at the top of the list.")
+        Text("Add as many habits as you'd like to track. You can reorganize habits to your liking by dragging and dropping them.")
     }
     var image: Image? {
-        Image(systemName: "star")
+        Image(systemName: "aqi.medium")
     }
 }

@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct RoutineDetailView: View {
     let routine: Routine
     
     @State var isRoutineFormPresented: Bool = false
-    
-    @Environment(\.path) var path: Binding<[Route]>
     
     init(routine: Routine) {
         self.routine = routine
@@ -24,7 +23,7 @@ struct RoutineDetailView: View {
                 .font(.system(size: 40, weight: .thin))
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
-                .padding()
+                .padding(.vertical, 8)
             
             Divider()
                 
@@ -42,8 +41,20 @@ struct RoutineDetailView: View {
                 Divider()
                     .padding(.vertical, 3)
                 
+                HStack {
+                    Text("Cadence")
+                        .font(.system(size: 20, weight: .thin))
+                    Spacer()
+                    
+                    Text(routine.cadence.capitalized)
+                        .font(.system(size: 20, weight: .thin))
+                }
+                
+                Divider()
+                    .padding(.vertical, 3)
+                
                 Text("Habits")
-                    .font(.system(size: 30, weight: .thin))
+                    .font(.system(size: 30, weight: .regular))
                     .padding(.top, 20)
                 
                 Divider()
@@ -54,7 +65,12 @@ struct RoutineDetailView: View {
                 // TODO: Unpack habits from Routine that user navigated to
                 ForEach(routine.habits.sorted { $0.orderIndex < $1.orderIndex } ) { habit in
                     HabitCard(habit: habit)
-                        .padding(24)
+                        .padding(18)
+                        .scrollTransition { content, phase in
+                            return content
+                                .blur(radius: phase == .identity ? 0 : 1)
+                                .opacity(phase == .identity ? 1 : 0.3)
+                        }
                     
                     Divider()
                 }
@@ -63,12 +79,7 @@ struct RoutineDetailView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    RoutineForm(routine: routine)
-                        .onAppear {
-                            path.wrappedValue.append(.view(routine))
-                        }
-                } label: {
+                NavigationLink(value: Route.edit(routine)) {
                     Text("Edit")
                 }
             }
@@ -78,28 +89,42 @@ struct RoutineDetailView: View {
 
 
 struct HabitCard: View {
+    @AppStorage("darkDisplay") var darkDisplay: Bool = false
+
     var habit: Habit
-    
-    @Environment(\.formState) var formState
     
     init(habit: Habit) {
         self.habit = habit
     }
     
+    func triggerHaptic() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+    
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             Text(habit.label)
                 .font(.system(size: 18, weight: .light))
-     
+                .strikethrough(habit.completed, color: darkDisplay ? .white : .black)
+                .animation(.easeIn, value: habit.completed)
+            
             Spacer()
             
             Divider()
                 .padding(.horizontal)
             
             Image(systemName: habit.completed ? "checkmark.circle.fill" : "circle")
-                .onTapGesture {
-                    habit.completed.toggle()
-                }
+                .animation(.bouncy, value: habit.completed)
+        }
+        .onChange(of: darkDisplay, { oldValue, newValue in
+            print("Dark display?: ", newValue)
+        })
+        .contentShape(Rectangle())
+        .onTapGesture {
+            triggerHaptic()
+            habit.completed.toggle()
+            habit.lastCompleted = .now
         }
     }
 }

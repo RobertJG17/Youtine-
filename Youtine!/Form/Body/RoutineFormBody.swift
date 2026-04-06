@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct RoutineFormBody: View {
     @Bindable var routineViewModel: RoutineViewModel
@@ -55,26 +56,34 @@ struct RoutineFormBody: View {
         }
         .padding([.horizontal, .top])
         
-        List {
-            // TODO: Unpack habits from Routine that user navigated to
-            ForEach(routineViewModel.draft.habits) { habit in
-                habitRow(habit)
+        if routineViewModel.draft.habits.isEmpty {
+            Spacer()
+            TipView(EmptyHabitTip(), arrowEdge: .bottom)
+                .symbolRenderingMode(.multicolor)
+                .padding(.horizontal)
+                .animation(.easeIn, value: routineViewModel.draft.habits.isEmpty)
+        } else {
+            List {
+                // TODO: Unpack habits from Routine that user navigated to
+                ForEach(routineViewModel.draft.habits) { habit in
+                    habitRow(habit)
+                }
+                .onMove(perform: routineViewModel.moveHabit)
             }
-            .onMove(perform: routineViewModel.moveHabit)
-        }
-        .listStyle(.plain)
-        .mask(
-            LinearGradient(
-                stops: [
-                    .init(color: .white, location: 0),
-                    .init(color: .clear, location: 1),
-                    .init(color: .clear, location: 2),
-                    .init(color: .clear, location: 3)
-                ],
-                startPoint: .center, endPoint: .bottom
+            .listStyle(.plain)
+            .mask(
+                LinearGradient(
+                    stops: [
+                        .init(color: .white, location: 0),
+                        .init(color: .clear, location: 1),
+                        .init(color: .clear, location: 2),
+                        .init(color: .clear, location: 3)
+                    ],
+                    startPoint: .center, endPoint: .bottom
+                )
+                .ignoresSafeArea()
             )
-            .ignoresSafeArea()
-        )
+        }
     }
     
     func habitRow(_ habit: HabitDraft) -> some View {
@@ -111,7 +120,7 @@ struct RoutineFormBody: View {
 }
 
 
-//#Preview {
-//    RoutineFormBody(routineViewModel: RoutineViewModel(routine: nil), habitViewModel: HabitViewModel())
-//}
+#Preview {
+    RoutineFormBody(routineViewModel: RoutineViewModel(routine: nil, index: 0), habitViewModel: HabitViewModel())
+}
 

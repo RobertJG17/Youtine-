@@ -4,4 +4,5 @@ import Foundation
 enum Route: Hashable {
     case view(Routine)
     case edit(Routine)
+    case create
 }

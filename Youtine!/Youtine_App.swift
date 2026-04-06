@@ -7,12 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 @main
 struct Youtine_App: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Routine.self,
+            Habit.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -22,7 +24,12 @@ struct Youtine_App: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
+    init() {
+        try? Tips.configure()
+        Tips.showAllTipsForTesting()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

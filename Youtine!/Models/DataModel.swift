@@ -5,80 +5,74 @@
 //  Created by Bobby Guerra on 2/19/26.
 //
 
-import SwiftData
 import SwiftUI
+import SwiftData
+
+enum Cadence: String, CaseIterable {
+    case once = "once"
+    case daily = "daily"
+    case weekly = "weekly"
+    case monthly = "monthly"
+}
 
 @Model
 class Routine: Identifiable {
     var id: UUID
-    var position: Double
+    var orderIndex: Int
     var title: String
     var start: Date
-    var cadence: Cadence
+    var cadence: String
     @Relationship(deleteRule: .cascade) var habits: [Habit]
 
     init(
-        id: UUID,
-        position: Double,
+        orderIndex: Int,
         title: String,
         start: Date,
-        cadence: Cadence,
+        cadence: String,
         habits: [Habit]
     ) {
-        self.id = id
-        self.position = position
+        self.id = UUID()
+        self.orderIndex = orderIndex
         self.title = title
         self.start = start
         self.cadence = cadence
         self.habits = habits
+    }
+    
+    init(from draft: RoutineDraft) {
+        self.id = draft.id
+        self.orderIndex = draft.orderIndex
+        self.title = draft.title
+        self.start = draft.start
+        self.cadence = draft.cadence.rawValue
+        self.habits = draft.habits
+            .sorted { $0.orderIndex < $1.orderIndex }
+            .map { Habit(from: $0) }
     }
 }
 
 @Model
 class Habit: Identifiable {
     var id: UUID
-    var position: Double = 0.0
     var label: String
+    var orderIndex: Int
     var completed: Bool
+    var lastCompleted: Date?
     
-    init(label: String) {
+    init(label: String = "", orderIndex: Int=0, completed: Bool=false) {
         self.id = UUID()
         self.label = label
-        self.completed = false
+        self.orderIndex = orderIndex
+        self.completed = completed
+        self.lastCompleted = nil
     }
-}
-
-@Observable
-class RoutineDraft: Identifiable {
-    var id: UUID
-    var position: Double
-    var title: String
-    var start: Date
-    var cadence: Cadence
-    var habits: [HabitDraft]
-
-    init() {
-        self.id = UUID() // Generate a unique identifier
-        self.position = 0.0
-        self.title = ""
-        self.start = .init()
-        self.cadence = .daily
-        self.habits = []
-    }
-}
-
-@Observable
-class HabitDraft: Identifiable {
-    var id: UUID
-    var position: Double
-    var label: String
-    var completed: Bool
     
-    init(label: String) {
-        self.id = UUID()
-        self.position = 0.0
-        self.label = label
+    init(from draft: HabitDraft, completed: Bool=false) {
+        self.id = draft.id
+        self.label = draft.label
+        self.orderIndex = draft.orderIndex
         self.completed = false
+        self.lastCompleted = nil
     }
 }
 
