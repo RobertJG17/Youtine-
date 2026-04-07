@@ -16,15 +16,14 @@ Youtine! is a beautifully designed routine and habit tracking app built with Swi
 ---
 
 ## Screenshots
-<!--
-After adding your screenshots (e.g. `screenshots/main.png`), uncomment and update the following:
 
-![Main Screen](Screenshots/AddHabit.png)
+![Main Screen](./Screenshots/Home.png)
+
 *Main routines overview*
 
-![Routine Detail](screenshots/detail.png)
+![Routine Detail](./Screenshots/AddRoutine.png)
+
 *Viewing habits in a routine*
--->
 
 ---
 
@@ -55,10 +54,3 @@ MIT License. See [LICENSE](LICENSE) for details.
 Created by Bobby Guerra.
 
 ---
-
-## Add Screenshots
-To display screenshots with captions:
-1. Add your screenshot images to a `screenshots/` directory at the root of your project.
-2. Uncomment the screenshot section above and update file names and captions as needed.
-
-If you provide screenshot files or file names, I can update this README for you!

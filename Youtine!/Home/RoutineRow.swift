@@ -32,7 +32,7 @@ struct RoutineRow: View {
 
                 Text("\(sortedHabits.filter { $0.completed }.count)/\(sortedHabits.count)")
                     .font(.system(size: 28))
-                    .strikethrough(allHabitsCompleted, color: darkDisplay ? .white : .black)
+                    .strikethrough(allHabitsCompleted && routine.habits.count != 0, color: darkDisplay ? .white : .black)
             }
         }
     }

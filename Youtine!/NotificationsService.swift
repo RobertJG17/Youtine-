@@ -83,7 +83,7 @@ struct NotificationsService {
     
     func updateNotification(routine: Routine) {
         // Remove the existing notification
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [routine.id.uuidString])
+        deleteNotification(id: routine.id.uuidString)
 
         // Re-add the notification with the new start time
         addNotification(routine: routine) // Adjust index if needed

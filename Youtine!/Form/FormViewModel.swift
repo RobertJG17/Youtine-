@@ -83,6 +83,7 @@ class RoutineViewModel {
     func update(_ routine: Routine) {
         routine.title = draft.title
         routine.start = draft.start
+        routine.cadence = draft.cadence.rawValue
 
         let draftIDs = Set(draft.habits.map { $0.id })
         

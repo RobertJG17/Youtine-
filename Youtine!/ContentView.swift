@@ -45,22 +45,10 @@ struct ContentView: View {
     // MARK: - HeaderView Subview
     
     private func HeaderView(width: CGFloat) -> some View {
-        ZStack(alignment: .center) {
-            Text("Youtine!")
-                .font(.system(size: 48, weight: .ultraLight, design: .rounded))
-                .underline(pattern: .solid)
-                .accessibilityAddTraits(.isHeader)
-            
-            HStack {
-                Spacer()
-                Image(systemName: darkDisplay ? "sun.max" : "moon.fill")
-                    .font(.system(size: 24))
-                    .contentShape(Rectangle())
-                    .onTapGesture { darkDisplay.toggle() }
-                    .accessibilityLabel(Text(darkDisplay ? "Switch to Light Mode" : "Switch to Dark Mode"))
-            }
-            .padding(.trailing, width / 6)
-        }
+        Text("Youtine!")
+            .font(.system(size: 48, weight: .ultraLight, design: .rounded))
+            .underline(pattern: .solid)
+            .accessibilityAddTraits(.isHeader)
     }
     
     var body: some View {
@@ -116,6 +104,28 @@ struct ContentView: View {
                     ToolbarItem(placement: .bottomBar) {
                         NavigationLink(value: Route.create) {
                             Label("Add Routine", systemImage: "plus")
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            Form {
+                                HStack {
+                                    Text("Display mode:")
+                                        .padding(.horizontal, 16)
+                                    Picker("Display Mode", selection: $darkDisplay) {
+                                        Image(systemName: "sun.max")
+                                            .tag(false)
+                                        Image(systemName: "moon.stars")
+                                            .tag(true)
+                                    }
+                                    .pickerStyle(.segmented)
+                                }
+                                .navigationTitle("Settings")
+                            }
+
+                        } label: {
+                            Image(systemName: "gear")
                         }
                     }
                 }
